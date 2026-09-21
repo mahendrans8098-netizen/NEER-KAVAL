@@ -11,7 +11,7 @@ import { useGeolocation } from "../hooks/useGeolocation";
 import { useVoice } from "../hooks/useVoice";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { api, isBackendConfigured, type WeatherData, type PublicXAI } from "../services/api";
-import { MapPin, RefreshCw, Volume2, VolumeX, AlertTriangle, Navigation, Building, LifeBuoy } from "lucide-react";
+import { MapPin, RefreshCw, Volume2, VolumeX, AlertTriangle, Navigation, Building, LifeBuoy, HelpCircle } from "lucide-react";
 
 // Default location (Coimbatore) for when GPS is denied
 const DEFAULT_LOCATION = { lat: 11.0168, lon: 76.9558 };
@@ -44,7 +44,9 @@ export default function PublicHome() {
       setWeather(weatherData);
       setXai(xaiData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load data");
+      // Show a translated message to citizens; keep the technical detail in the console.
+      console.error("NEERKAVAL data load failed:", err);
+      setError(t("dataLoadFailed"));
     } finally {
       setLoading(false);
     }
@@ -72,7 +74,7 @@ export default function PublicHome() {
   // Voice message
   const voiceMessage = xai
     ? `${xai.risk_label}. ${xai.what_to_do}. ${xai.why.map((f) => `${f.label}: ${f.description}`).join(". ")}`
-    : t("floodRisk");
+    : `${t("riskUnknown")}. ${t("riskUnknownDetail")}`;
 
   const handleVoice = () => {
     if (isSpeaking) {
@@ -145,18 +147,31 @@ export default function PublicHome() {
         </div>
       )}
 
-      {/* Current safety status */}
-      {!isEmergency && (
+      {/* Current safety status — only shown when a real assessment exists.
+          Never assert "safe" without model-derived data. */}
+      {!isEmergency && xai && (
         <div
           className="rounded-xl p-6 text-center"
-          style={{ backgroundColor: xai?.risk_color || "#22a559", color: "white" }}
+          style={{ backgroundColor: xai.risk_color, color: "white" }}
         >
           {isDemoLocation && (
             <div className="mb-2">{dataStatusBadge("DEMO")}</div>
           )}
-          <div className="text-4xl mb-2">{xai?.risk_icon || "🟢"}</div>
-          <h2 className="text-xl font-bold">{xai?.risk_label || t("normal")}</h2>
-          {xai?.what_to_do && <p className="text-base mt-1">{xai.what_to_do}</p>}
+          <div className="text-4xl mb-2">{xai.risk_icon}</div>
+          <h2 className="text-xl font-bold">{xai.risk_label}</h2>
+          {xai.what_to_do && <p className="text-base mt-1">{xai.what_to_do}</p>}
+        </div>
+      )}
+
+      {/* No assessment available — state that plainly instead of implying safety. */}
+      {!isEmergency && !xai && !loading && (
+        <div className="rounded-xl p-6 text-center bg-slate-200 border-2 border-slate-400 text-slate-800">
+          <div className="mb-2 flex justify-center">{dataStatusBadge("UNAVAILABLE")}</div>
+          <div className="flex justify-center mb-2">
+            <HelpCircle size={40} aria-hidden="true" />
+          </div>
+          <h2 className="text-xl font-bold">{t("riskUnknown")}</h2>
+          <p className="text-base mt-1">{t("riskUnknownDetail")}</p>
         </div>
       )}
 
@@ -261,21 +276,21 @@ export default function PublicHome() {
       <div className="grid grid-cols-3 gap-3 pt-2">
         <Link
           to="/safety"
-          className="bg-primary text-white rounded-xl py-4 flex flex-col items-center gap-1 font-semibold hover:bg-primary-hover transition-colors emergency-btn"
+          className="bg-primary text-white rounded-xl py-4 px-2 flex flex-col items-center justify-center gap-1 font-semibold hover:bg-primary-hover transition-colors emergency-btn"
         >
           <Navigation size={28} />
-          <span className="text-sm">{t("goToSafety")}</span>
+          <span className="text-sm text-center leading-tight">{t("goToSafety")}</span>
         </Link>
         <Link
           to="/shelter"
-          className="bg-safe text-white rounded-xl py-4 flex flex-col items-center gap-1 font-semibold hover:bg-safe-hover transition-colors emergency-btn"
+          className="bg-safe text-white rounded-xl py-4 px-2 flex flex-col items-center justify-center gap-1 font-semibold hover:bg-safe-hover transition-colors emergency-btn"
         >
           <Building size={28} />
-          <span className="text-sm">{t("findShelter")}</span>
+          <span className="text-sm text-center leading-tight">{t("findShelter")}</span>
         </Link>
         <Link
           to="/sos"
-          className="bg-danger text-white rounded-xl py-4 flex flex-col items-center gap-1 font-semibold hover:bg-danger-hover transition-colors emergency-btn animate-pulse-slow"
+          className="bg-danger text-white rounded-xl py-4 px-2 flex flex-col items-center justify-center gap-1 font-semibold hover:bg-danger-hover transition-colors emergency-btn animate-pulse-slow"
         >
           <LifeBuoy size={28} />
           <span className="text-sm">{t("sos")}</span>

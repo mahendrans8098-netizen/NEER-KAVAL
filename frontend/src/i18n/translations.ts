@@ -30,6 +30,9 @@ export const translations = {
     currentStatus: "தற்போதைய நிலை",
     floodRisk: "வெள்ள அபாயம்",
     normal: "பாதுகாப்பான",
+    riskUnknown: "அபாய நிலை தெரியவில்லை",
+    riskUnknownDetail:
+      "தரவு கிடைக்காததால் அபாய மதிப்பீடு செய்ய முடியவில்லை. இது பாதுகாப்பான என்பதைக் குறிக்காது. அதிகார அறிவிப்புகளைப் பின்பற்றவும்.",
     caution: "கவனம் தேவை",
     warning: "எச்சரிக்கை",
     highRisk: "வெள்ள அபாயம்",
@@ -43,6 +46,8 @@ export const translations = {
     findShelter: "நிவாரண மையம்",
     emergencyHelp: "அவசர உதவி",
     refreshNow: "இப்போது புதுப்பிக்க",
+    dataLoadFailed:
+      "தரவைப் பெற முடியவில்லை. இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
     goThere: "அங்கே செல்ல",
 
     // Weather
@@ -166,6 +171,9 @@ export const translations = {
     currentStatus: "Current Status",
     floodRisk: "Flood Risk",
     normal: "NORMAL",
+    riskUnknown: "RISK STATUS UNKNOWN",
+    riskUnknownDetail:
+      "No data is available, so flood risk cannot be assessed. This does not mean it is safe. Follow official warnings.",
     caution: "CAUTION",
     warning: "WARNING",
     highRisk: "HIGH RISK",
@@ -178,6 +186,8 @@ export const translations = {
     findShelter: "Find Shelter",
     emergencyHelp: "Emergency Help",
     refreshNow: "Refresh Now",
+    dataLoadFailed:
+      "Could not load data. Check your internet connection and try again.",
     goThere: "Go There",
 
     currentWeather: "Current Weather",
