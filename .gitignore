@@ -1,0 +1,22 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Databases
+*.db
+*.sqlite3
+
+# Node
+node_modules/
+dist/
+
+# Secrets — never commit
+.env
+.env.local
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
