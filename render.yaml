@@ -1,0 +1,27 @@
+# Render.com blueprint for the NEERKAVAL backend.
+# Deploy: push this repo, then on render.com choose "New > Blueprint"
+# and point it at the repository. The free plan is enough for an SIH demo.
+services:
+  - type: web
+    name: neerkaval-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: APP_MODE
+        value: LIVE
+      # Comma-separated list of allowed frontend origins.
+      # Replace with your GitHub Pages / Vercel origin before going live.
+      - key: CORS_ORIGINS
+        value: https://mahendrans8098-netizen.github.io
+      # SQLite persists only until the instance restarts on the free plan.
+      # Swap in a managed Postgres URL for durable storage.
+      - key: DATABASE_URL
+        value: sqlite:///./neerkaval.db

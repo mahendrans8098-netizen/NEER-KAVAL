@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ta">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23006494'/><text y='22' x='16' font-size='18' text-anchor='middle'>💧</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#006494" />
+    <meta name="description" content="NEERKAVAL — Real-Time Flood Safety, Explainable AI & Emergency Response Platform" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>NEERKAVAL — நீர் காவல்</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Register service worker for PWA offline support
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {
+            // Service worker registration failed — app still works online
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
